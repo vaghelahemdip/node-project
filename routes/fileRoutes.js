@@ -173,51 +173,6 @@ router.get('/mobile-list', async (req, res) => {
 });
 
 
-router.get('/users', async (req, res) => {
-    const { firstName, page, pageSize = 10 } = req.query; // Get the search query and pagination parameters
-
-    // Convert page and pageSize to numbers
-    const pageNumber = page ? parseInt(page) : null;
-    const limit = parseInt(pageSize);
-
-    // Connect to MongoDB
-    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
-    try {
-        await client.connect();
-        const db = client.db('vhemdip');
-        const collection = db.collection('user_management');
-
-        let query = {};
-        if (firstName) {
-            // Use regex to match partially based on the first name
-            const regex = new RegExp(firstName, 'i'); // 'i' for case-insensitive search
-            query.firstName = regex;
-        }
-
-        if (pageNumber !== null) {
-            // Calculate skip based on pagination parameters
-            const skip = (pageNumber - 1) * limit;
-
-            // Fetch total count of matching users
-            const totalCount = await collection.countDocuments(query);
-
-            // Fetch users with pagination
-            const users = await collection.find(query).skip(skip).limit(limit).toArray();
-
-            res.status(200).json({ totalCount, users });
-        } else {
-            // Fetch all users
-            const users = await collection.find(query).toArray();
-
-            res.status(200).json({ totalCount: users.length, users });
-        }
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    } finally {
-        await client.close();
-    }
-});
 
 
 
@@ -309,5 +264,45 @@ router.get('/user-details/:userId', async (req, res) => {
     }
 });
 
+
+router.get('/users', async (req, res) => {
+    const { firstName, page, pageSize = 10 } = req.query; // Get the search query and pagination parameters
+
+    // Convert page and pageSize to numbers
+    const pageNumber = page ? parseInt(page) : null;
+    const limit = parseInt(pageSize);
+
+    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
+    try {
+        await client.connect();
+        const db = client.db('vhemdip');
+        const collection = db.collection('user_management');
+
+        let query = {};
+        if (firstName) {
+            const regex = new RegExp(firstName, 'i'); 
+            query.firstName = regex;
+        }
+
+        if (pageNumber !== null) {
+            const skip = (pageNumber - 1) * limit;
+
+            const totalCount = await collection.countDocuments(query);
+
+            const users = await collection.find(query).skip(skip).limit(limit).toArray();
+
+            res.status(200).json({ totalCount, users });
+        } else {
+            const users = await collection.find(query).toArray();
+
+            res.status(200).json({ totalCount: users.length, users });
+        }
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        await client.close();
+    }
+});
 
 module.exports = router;
