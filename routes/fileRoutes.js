@@ -276,7 +276,7 @@ router.get('/users', async (req, res) => {
     try {
         await client.connect();
         const db = client.db('vhemdip');
-        const collection = db.collection('user_management');
+        const collection = db.collection('add_user');
 
         let query = {};
         if (firstName) {
