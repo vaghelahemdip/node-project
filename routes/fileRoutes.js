@@ -318,7 +318,7 @@ router.post('/addRole', async (req, res) => {
     }
 
     // Generate a unique ID for the user
-    const userId = uuidv4();
+    const roleId = uuidv4();
 
     // Create user object with ID, first name, and last name
     const user = { id: roleId, roleName };
