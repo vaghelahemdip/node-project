@@ -377,6 +377,43 @@ router.get('/roles', async (req, res) => {
     }
 });
 
+
+router.put('/editRole/:roleId', async (req, res) => {
+    const roleId = req.params.roleId;
+    const { roleName } = req.body;
+
+    // Validate input fields
+    if (!roleName ) {
+        return res.status(400).json({ error: 'Role name are required' });
+    }
+
+    // Connect to MongoDB
+    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
+    try {
+        await client.connect();
+        const db = client.db('vhemdip'); // Replace 'yourDatabaseName' with your actual database name
+        const collection = db.collection('user_roles'); // Assuming your collection name is 'user'
+
+        // Check if user with given ID exists
+        const existingUser = await collection.findOne({ id: roleId });
+        if (!existingUser) {
+            return res.status(404).json({ error: 'Role not found' });
+        }
+
+        // Update user details in MongoDB
+        await collection.updateOne({ id: roleId }, { $set: { roleName } });
+
+        res.status(200).json({ message: 'Role updated successfully' });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        await client.close();
+    }
+});
+
+
+
 module.exports = router;
 
 
