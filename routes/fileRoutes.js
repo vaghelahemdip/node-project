@@ -181,11 +181,11 @@ router.get('/users', async (req, res) => {
     const limit = parseInt(pageSize);
 
     // Connect to MongoDB
-    const client = new MongoClient('mongodb://localhost:27017/', { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
     try {
         await client.connect();
-        const db = client.db('skypride');
-        const collection = db.collection('addUser');
+        const db = client.db('vhemdip');
+        const collection = db.collection('user_management');
 
         let query = {};
         if (firstName) {
