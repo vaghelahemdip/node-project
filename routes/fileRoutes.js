@@ -180,11 +180,11 @@ router.delete('/delete-user/:userId', async (req, res) => {
     const userId = req.params.userId;
 
     // Connect to MongoDB
-    const client = new MongoClient('mongodb://localhost:27017/', { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
     try {
         await client.connect();
-        const db = client.db('skypride'); // Replace 'yourDatabaseName' with your actual database name
-        const collection = db.collection('addUser'); // Assuming your collection name is 'user'
+        const db = client.db('vhemdip'); // Replace 'yourDatabaseName' with your actual database name
+        const collection = db.collection('add_user'); // Assuming your collection name is 'user'
 
         // Check if user with given ID exists
         const existingUser = await collection.findOne({ id: userId });
@@ -214,11 +214,11 @@ router.put('/editUser/:userId', async (req, res) => {
     }
 
     // Connect to MongoDB
-    const client = new MongoClient('mongodb://localhost:27017/', { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
     try {
         await client.connect();
-        const db = client.db('skypride'); // Replace 'yourDatabaseName' with your actual database name
-        const collection = db.collection('addUser'); // Assuming your collection name is 'user'
+        const db = client.db('vhemdip'); // Replace 'yourDatabaseName' with your actual database name
+        const collection = db.collection('add_user'); // Assuming your collection name is 'user'
 
         // Check if user with given ID exists
         const existingUser = await collection.findOne({ id: userId });
@@ -243,11 +243,11 @@ router.get('/user-details/:userId', async (req, res) => {
     const userId = req.params.userId;
 
     // Connect to MongoDB
-    const client = new MongoClient('mongodb://localhost:27017/', { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
     try {
         await client.connect();
-        const db = client.db('skypride'); // Replace 'yourDatabaseName' with your actual database name
-        const collection = db.collection('addUser'); // Assuming your collection name is 'user'
+        const db = client.db('vhemdip'); // Replace 'yourDatabaseName' with your actual database name
+        const collection = db.collection('add_user'); // Assuming your collection name is 'user'
 
         // Fetch user details from MongoDB
         const user = await collection.findOne({ id: userId });
