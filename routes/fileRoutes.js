@@ -412,7 +412,33 @@ router.put('/editRole/:roleId', async (req, res) => {
     }
 });
 
+router.delete('/delete-role/:roleId', async (req, res) => {
+    const roleId = req.params.roleId;
 
+    // Connect to MongoDB
+    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
+    try {
+        await client.connect();
+        const db = client.db('vhemdip'); // Replace 'yourDatabaseName' with your actual database name
+        const collection = db.collection('user_roles'); // Assuming your collection name is 'user'
+
+        // Check if user with given ID exists
+        const existingUser = await collection.findOne({ id: roleId });
+        if (!existingUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Delete user from MongoDB
+        await collection.deleteOne({ id: roleId });
+
+        res.status(200).json({ message: 'User Role deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        await client.close();
+    }
+});
 
 module.exports = router;
 
