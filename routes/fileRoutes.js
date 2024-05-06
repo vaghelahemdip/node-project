@@ -321,7 +321,7 @@ router.post('/addRole', async (req, res) => {
     const roleId = uuidv4();
 
     // Create user object with ID, first name, and last name
-    const user = { id: roleId, roleName };
+    const role = { id: roleId, roleName };
 
     // Connect to MongoDB
     const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -331,9 +331,9 @@ router.post('/addRole', async (req, res) => {
         const collection = db.collection('user_roles'); // Assuming your collection name is 'user'
 
         // Insert new user into MongoDB
-        await collection.insertOne(user);
+        await collection.insertOne(role);
 
-        res.status(201).json({ message: 'User Role added successfully', user });
+        res.status(201).json({ message: 'User Role added successfully', role });
     } catch (error) {
         console.error('Error adding user:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -342,6 +342,42 @@ router.post('/addRole', async (req, res) => {
     }
 });
 
+
+
+router.get('/roles', async (req, res) => {
+    const { roleName } = req.query; // Get the search query parameter 'roleName'
+
+    // Convert page and pageSize to numbers if needed (not implemented in the provided code)
+
+    const client = new MongoClient('mongodb+srv://vhemdip:AMv69NI2cCSwaI9Y@cluster0.hivu7de.mongodb.net/', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+
+    try {
+        await client.connect();
+        const db = client.db('vhemdip');
+        const collection = db.collection('user_roles');
+
+        let query = {};
+        if (roleName) {
+            const regex = new RegExp(roleName, 'i');
+            query.roleName = regex;
+        }
+
+        // Fetch roles based on the constructed query
+        const roles = await collection.find(query).toArray();
+
+        res.status(200).json({ totalCount: roles.length, roles }); // Send the roles array as JSON response
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        await client.close();
+    }
+});
+
+module.exports = router;
 
 
 
